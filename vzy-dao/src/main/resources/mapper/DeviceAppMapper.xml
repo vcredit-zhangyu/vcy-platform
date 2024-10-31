@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vcredit.vzy.dao.mapper.DeviceAppMapper">
+
+    <select id="queryByDeviceIdAndApp" resultType="com.vcredit.vzy.dao.entity.DeviceAppDO">
+        select id,
+               device_id,
+               last_app,
+               app_time,
+               del_flag,
+               created_by,
+               created_time,
+               updated_by,
+               updated_time
+        from t_device_app
+        where device_id = #{deviceId}
+          and last_app = #{app} and del_flag = 'N' limit 1
+    </select>
+
+    <select id="deviceAppPageQuery" resultType="com.vcredit.vzy.common.vo.DeviceAppVo">
+        select
+        tda.device_id as deviceId,
+        td.device_no as deviceNo,
+        td.device_name as deviceName,
+        tdd.device_type as deviceType,
+        tdd.device_system as deviceSystem,
+        tdd.device_system_version as deviceSystemVersion,
+        tda.last_app as app,
+        tda.app_time as appTime,
+        td.device_charge as deviceCharge
+        from t_device_app tda
+        inner join t_device td on tda.device_id = td.id
+        inner join t_device_detail tdd on td.id = tdd.device_id
+        <where>
+            <if test="queryDTO.deviceNo != null and queryDTO.deviceNo != ''">
+                and td.device_no = #{queryDTO.deviceNo}
+            </if>
+            <if test="queryDTO.deviceType != null and queryDTO.deviceType != ''">
+                and tdd.device_type = #{queryDTO.deviceType}
+            </if>
+            <if test="queryDTO.app != null and queryDTO.app != ''">
+                and tda.last_app = #{queryDTO.app}
+            </if>
+            and tda.del_flag = 'N'
+        </where>
+        order by tda.app_time desc
+    </select>
+    <select id="queryUpdateRemindList" resultType="com.vcredit.vzy.common.vo.DeviceAppVo">
+        select         tda.device_id as deviceId,
+                       td.device_no as deviceNo,
+                       td.device_name as deviceName,
+               td.device_charge as deviceCharge,
+                       tda.last_app as app,
+                       tda.app_time as appTime
+        from t_device_app tda
+                 inner join t_device td on tda.device_id = td.id
+        where tda.del_flag = 'N' and td.device_status = 'using'
+<![CDATA[ and tda.app_time < #{updateRemindTime} ]]>
+    </select>
+</mapper>

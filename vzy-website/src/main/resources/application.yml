@@ -1,0 +1,64 @@
+spring:
+  profiles:
+    active: dev
+    include: common
+  datasource:
+    url: jdbc:mysql://ip:port/vzy_platform?sslMode=DISABLED&connectTimeout=10000&socketTimeout=10000&autoReconnect=true&failOverReadOnly=false&maxReconnects=10&allowPublicKeyRetrieval=true&useSSL=false&requireSSL=false&serverTimezone=Asia/Shanghai&verifyServerCertificate=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=utf8mb4
+    username: ?????????
+    password: ?????????
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 15
+      idle-timeout: 60000
+      max-lifetime: 600000
+      connection-timeout: 30000
+      connection-test-query: select 1
+  redis:
+    database: 15
+    sentinel:
+      master: ?????????
+      nodes: ?????????
+    password: ?????????
+
+
+
+log:
+  kafka-log-enabled: true #开启kafka日志
+  kafka-servers: ?????????
+  project-name: ????????? #项目名
+  kafka-topic: ????????? #kafka主体名
+  console-log-level: info #控制台日志级别,生产上若不希望打印info可改成error或者off
+  trace:
+    async-enabled: true
+
+logging.config: classpath:logback-module.xml
+
+mybatis:
+  mapper-locations: classpath:mapper/*mapper.xml
+
+
+auth-server: ?????????
+auth-server-local: ?????????
+security:
+  oauth2:
+    client:
+      client-id: vzy-website
+      client-secret: vzy-website
+      access-token-uri: ${auth-server}/oauth/token
+      user-authorization-uri: ${auth-server}/oauth/authorize
+      authorized-grant-types: authorization_code
+      redirect-url: http://localhost:33956/login
+      user-info-uri: ${auth-server}/user/info
+      user-exit-uri: ${auth-server}/user/logout
+      #index-redirect-url: http://test-pgphone.h5.vcredit-t.com.local/#/
+      index-redirect-url: http://localhost:8008/#/
+      permit-urls: /device/app/commit,/device/info/query,/app/version/query,/device/info/update
+
+application-name: vzy-website
+
+ecm:
+  host: ?????????
+  upload-service: ?????????
+  download-service: ?????????
+  access-token: ?????????

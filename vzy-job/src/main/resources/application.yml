@@ -1,0 +1,61 @@
+spring:
+  profiles:
+    active: dev
+    include: common
+  datasource:
+    url: jdbc:mysql://ip:port/vzy_platform?sslMode=DISABLED&connectTimeout=10000&socketTimeout=10000&autoReconnect=true&failOverReadOnly=false&maxReconnects=10&allowPublicKeyRetrieval=true&useSSL=false&requireSSL=false&serverTimezone=Asia/Shanghai&verifyServerCertificate=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=utf8mb4
+    username: ?????????
+    password: ?????????
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 15
+      idle-timeout: 60000
+      max-lifetime: 600000
+      connection-timeout: 30000
+      connection-test-query: select 1
+  redis:
+    database: 15
+    sentinel:
+      master: ?????????
+      nodes: ?????????
+    password: ?????????
+
+
+
+log:
+  kafka-log-enabled: true #开启kafka日志
+  kafka-servers: ?????????
+  project-name: ????????? #项目名
+  kafka-topic: ????????? #kafka主体名
+  console-log-level: info #控制台日志级别,生产上若不希望打印info可改成error或者off
+  trace:
+    async-enabled: true
+
+logging.config: classpath:logback-module.xml
+
+mybatis:
+  mapper-locations: classpath:mapper/*mapper.xml
+
+
+vcredit:
+  xxljob:
+    executor:
+      ip:
+      port: 9999
+      appName: vzy-job
+    admin:
+      addresses: ?????????
+
+device:
+  adminMobile: ?????????
+  remind:
+    token: ?????????
+    updateUnit: month
+    updateInterval: 3
+    borrowUnit: day
+    borrowInterval: 2
+
+notify:
+  dingTalk:
+    async: false

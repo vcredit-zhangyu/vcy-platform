@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vcredit.vzy.dao.mapper.DeviceMapper">
+    <update id="deviceStatusUpdate">
+        update t_device
+        set device_status = #{deviceStatus},
+            updated_by    = #{updatedBy},
+            updated_time  = now()
+        where id = #{deviceId}
+    </update>
+
+    <update id="deviceApprove">
+        update t_device
+        <set>
+            device_status = #{deviceStatus},
+            <if test="deviceCharge != null">
+                device_charge = #{deviceCharge},
+            </if>
+            <if test="deviceChargeAcct != null">
+                device_charge_acct = #{deviceChargeAcct},
+            </if>
+            expire_date = #{expireDate},
+            updated_by = #{updatedBy},
+            updated_time = now()
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateDeviceInfo">
+        update t_device
+        <set>
+            device_no = #{deviceNo},
+            device_name = #{deviceName},
+            device_charge = #{deviceCharge},
+            device_charge_acct = #{deviceChargeAcct},
+            expire_date = #{expireDate},
+            updated_by = #{updatedBy},
+            updated_time = now()
+        </set>
+        where id = #{id}
+
+    </update>
+
+    <select id="queryByDeviceNo" resultType="com.vcredit.vzy.dao.entity.DeviceDO">
+        select td.id                 as id,
+               td.device_no          as deviceNo,
+               td.device_name        as deviceName,
+               td.device_status      as deviceStatus,
+               td.device_charge      as deviceCharge,
+               td.device_charge_acct as deviceChargeAcct,
+               td.expire_date        as expireDate,
+               td.del_flag           as delFlag,
+               td.created_by         as createdBy,
+               td.created_time       as createdTime,
+               td.updated_by         as updatedBy,
+               td.updated_time       as updatedTime
+        from t_device td
+                 inner join T_device_detail tdd on td.id = tdd.device_id
+        where (tdd.device_imei = #{deviceNo} or tdd.device_serial_no = #{deviceNo})
+          and td.del_flag = 'N' limit 1
+    </select>
+
+    <select id="deviceInfoPageQuery" resultType="com.vcredit.vzy.common.vo.DevicePageVo">
+        select
+        td.id as deviceId,
+        td.device_no as deviceNo,
+        td.device_name as deviceName,
+        tdd.device_type as deviceType,
+        tdd.device_model as deviceModel,
+        tdd.device_system as deviceSystem,
+        tdd.device_system_version as deviceSystemVersion,
+        td.device_status as deviceStatus,
+        td.device_charge as deviceCharge,
+        td.device_charge_acct as deviceChargeAcct,
+        td.expire_date as expireDate
+        from t_device td
+        left join t_device_detail tdd on td.id = tdd.device_id
+        <where>
+            td.del_flag = 'N'
+            <if test="queryDTO.deviceTypeList != null and queryDTO.deviceTypeList.size > 0">
+                and tdd.device_type in
+                <foreach collection="queryDTO.deviceTypeList" item="deviceType" index="index"
+                    open="(" close=")" separator=",">
+                    #{deviceType}
+                </foreach>
+            </if>
+            <if test="queryDTO.deviceName != '' and queryDTO.deviceName != null">
+                and td.device_name like concat('%',#{queryDTO.deviceName},'%')
+            </if>
+            <if test="queryDTO.deviceNo != '' and queryDTO.deviceNo != null">
+                and td.device_no = #{queryDTO.deviceNo}
+            </if>
+            <if test="queryDTO.deviceCharge != '' and queryDTO.deviceCharge != null">
+                and td.device_charge = #{queryDTO.deviceCharge}
+            </if>
+            <if test="queryDTO.deviceStatusList != null and queryDTO.deviceStatusList.size > 0">
+                and td.device_status in
+                <foreach collection="queryDTO.deviceStatusList" item="deviceStatus" index="index"
+                    open="(" close=")" separator=",">
+                    #{deviceStatus}
+                </foreach>
+            </if>
+        </where>
+        order by td.updated_time desc
+    </select>
+
+    <select id="deviceInfoDetail" resultType="com.vcredit.vzy.common.vo.DeviceDetailVo">
+        select td.id                     as deviceId,
+               td.device_no              as deviceNo,
+               td.device_name            as deviceName,
+               td.device_charge          as deviceCharge,
+               td.device_charge_acct     as deviceChargeAcct,
+               td.expire_date            as expireDate,
+               tdd.device_type           as deviceType,
+               tdd.device_brand          as deviceBrand,
+               tdd.device_model          as deviceModel,
+               tdd.device_system         as deviceSystem,
+               tdd.device_system_version as deviceSystemVersion,
+               tdd.device_login_user     as deviceLoginUser,
+               tdd.device_login_key      as deviceLoginKey,
+               tdd.device_imei           as deviceImei,
+               tdd.device_serial_no      as deviceSerialNo,
+               tdd.device_resolution     as deviceResolution,
+               tdd.device_color          as deviceColor,
+               tdd.device_size           as deviceSize,
+               tdd.device_accessory      as deviceAccessory,
+               tdd.device_remark         as deviceRemark,
+               td.created_time           as createdTime,
+               td.updated_time           as updatedTime
+        from t_device td
+                 left join t_device_detail tdd on td.id = tdd.device_id
+        where td.id = #{deviceId}
+    </select>
+    <select id="queryUpdateRemindList" resultType="com.vcredit.vzy.dao.entity.DeviceDO">
+        select td.id                 as id,
+               td.device_no          as deviceNo,
+               td.device_name        as deviceName,
+               td.device_status      as deviceStatus,
+               td.device_charge      as deviceCharge,
+               td.device_charge_acct as deviceChargeAcct,
+               td.expire_date        as expireDate,
+               td.del_flag           as delFlag,
+               td.created_by         as createdBy,
+               td.created_time       as createdTime,
+               td.updated_by         as updatedBy,
+               td.updated_time       as updatedTime
+        from t_device td
+        where td.del_flag = 'N' and td.device_status != 'abandoned'
+<![CDATA[ and td.updated_time < #{updateRemindTime} ]]>
+
+    </select>
+
+
+    <select id="deviceFeedbackPageQuery" resultType="com.vcredit.vzy.common.vo.DeviceFeedbackVo">
+        select
+        tdf.id,
+        tdf.content,
+        tdf.created_time as date,
+        tdf.handle_result as handleResult,
+        td.device_no as deviceNo
+        from t_device_feedback tdf
+        inner join t_device td on td.id = tdf.device_id
+        <where>
+            td.del_flag = 0
+
+            <if test="queryDTO.handleResult != '' and queryDTO.handleResult != null">
+                and tdf.handle_result = #{queryDTO.handleResult}
+            </if>
+            <if test="queryDTO.deviceNo != '' and queryDTO.deviceNo != null">
+                and td.device_no = #{queryDTO.deviceNo}
+            </if>
+            <if test="queryDTO.feedbackStartTime != null">
+                <![CDATA[ and t.created_time >= #{feedbackStartTime} ]]>
+            </if>
+            <if test=" queryDTO.feedbackEndTime!= null">
+                <![CDATA[ and t.created_time <= #{feedbackEndTime} ]]>
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vcredit.vzy.dao.mapper.DeviceLogMapper">
+
+    <select id="deviceInfoPageQuery" resultType="com.vcredit.vzy.common.vo.DeviceLogVo">
+        select
+        t.device_no as deviceNo,
+        t.device_name as deviceName,
+        t.oper_person as operPerson,
+        t.oper_time as operTime,
+        t.oper_detail as operDetail
+        from t_device_log t
+        <where>
+            t.del_flag = 'N'
+            <if test="queryDTO.deviceNo != null and queryDTO.deviceNo != ''">
+                and t.device_no = #{queryDTO.deviceNo}
+            </if>
+            <if test="queryDTO.deviceName != null and queryDTO.deviceName != ''">
+                and t.device_name like concat('%',#{queryDTO.deviceName},'%')
+            </if>
+            <if test="queryDTO.operPerson != null and queryDTO.operPerson != ''">
+                and t.oper_person = #{queryDTO.operPerson}
+            </if>
+        </where>
+        order by oper_time desc
+    </select>
+</mapper>

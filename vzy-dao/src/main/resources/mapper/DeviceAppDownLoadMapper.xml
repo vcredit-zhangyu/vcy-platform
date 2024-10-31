@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vcredit.vzy.dao.mapper.DeviceAppDownLoadMapper">
+
+    <select id="deviceAppDownLoadQuery" resultType="com.vcredit.vzy.dao.entity.DeviceAppDownloadDO">
+
+        select * from t_app_download where 1=1
+        <if test="model != null and model.size() > 0">
+            and type in
+            <foreach item="item" collection="model" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="version!='' and  version!=null" >
+            and version like concat('%',#{version},'%')
+        </if>
+    </select>
+
+
+
+</mapper>

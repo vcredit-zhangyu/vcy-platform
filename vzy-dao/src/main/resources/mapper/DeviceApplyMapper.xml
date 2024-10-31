@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vcredit.vzy.dao.mapper.DeviceApplyMapper">
+    <select id="applyPageQuery" resultType="com.vcredit.vzy.common.vo.DeviceApplyVo">
+        select t.id as applyId,
+        t.device_id as deviceId,
+        t.apply_type as applyType,
+        t.apply_status as applyStatus,
+        t.apply_time as applyTime,
+        t.apply_person as applyPerson,
+        t.approve_person as approvePerson,
+        t.approve_reason as approveReason,
+        t.created_time as createdTime,
+        t.updated_time as updatedTime,
+               td.device_no as deviceNo,
+               td.device_name as deviceName
+        from t_device_apply t
+        inner join t_device td on t.device_id = td.id
+        <where>
+            t.del_flag = 'N'
+            <if test="queryDTO.applyType != '' and queryDTO.applyType != null">
+                and t.apply_type = #{queryDTO.applyType}
+            </if>
+            <if test="queryDTO.applyStatus != '' and queryDTO.applyStatus != null">
+                and t.apply_status = #{queryDTO.applyStatus}
+            </if>
+            <if test="queryDTO.applyTimeBegin != '' and queryDTO.applyTimeBegin != null">
+                and t.apply_time >= #{queryDTO.applyTimeBegin}
+            </if>
+            <if test="queryDTO.applyTimeEnd != '' and queryDTO.applyTimeEnd != null">
+                <![CDATA[ and t.apply_time <= #{queryDTO.applyTimeEnd} ]]>
+            </if>
+            <if test="queryDTO.applyPerson != '' and queryDTO.applyPerson != null">
+                and t.apply_person = #{queryDTO.applyPerson}
+            </if>
+            <if test="queryDTO.applyPersonAcct != '' and queryDTO.applyPersonAcct != null">
+                and t.apply_person_acct = #{queryDTO.applyPersonAcct}
+            </if>
+        </where>
+        order by t.created_time desc
+    </select>
+    <select id="applyDetail" resultType="com.vcredit.vzy.common.vo.DeviceApplyDetailVo">
+        select t.id             as applyId,
+               t.apply_type     as applyType,
+               t.apply_status   as applyStatus,
+               t.apply_time     as applyTime,
+               t.apply_person   as applyPerson,
+               t.approve_person as approvePerson,
+               t.approve_reason as approveReason,
+               t.apply_reason as applyReason,
+               t.created_time   as createdTime,
+               t.updated_time   as updatedTime,
+               t.apply_reason as applyReason,
+               td.device_no     as deviceNo,
+               td.device_name   as deviceName
+        from t_device_apply t
+                 inner join t_device td on t.device_id = td.id
+        where t.id = #{applyId}
+    </select>
+</mapper>

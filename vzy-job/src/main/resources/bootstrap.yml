@@ -1,0 +1,93 @@
+server:
+  port: 33957
+spring:
+  application:
+    name: vzy-job
+  cloud:
+    config:
+      enabled: false
+      fail-fast: true
+    consul:
+      discovery:
+        enabled: false
+        register: false
+      enabled: false
+---
+spring:
+  config:
+    activate:
+      on-profile: sit
+  cloud:
+    config:
+      enabled: true
+      profile: sit
+      name: ${spring.application.name}
+      discovery:
+        enabled: true
+        service-id: config-service
+    consul:
+      enabled: true
+      port: 8500
+      host: localhost
+      discovery:
+        preferIpAddress: true
+        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+        register: true
+        enabled: true
+        query-passing: true
+        health-check-interval: 5s
+        health-check-critical-timeout: 15s
+        health-check-timeout: 5s
+---
+spring:
+  config:
+    activate:
+      on-profile: fat
+  cloud:
+    config:
+      enabled: true
+      profile: fat
+      name: ${spring.application.name}
+      discovery:
+        enabled: true
+        service-id: config-service
+    consul:
+      enabled: true
+      port: 8500
+      host: localhost
+      discovery:
+        preferIpAddress: true
+        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+        register: true
+        enabled: true
+        query-passing: true
+        health-check-interval: 5s
+        health-check-critical-timeout: 15s
+        health-check-timeout: 5s
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  cloud:
+    config:
+      enabled: true
+      profile: prod
+      name: ${spring.application.name}
+      discovery:
+        enabled: true
+        service-id: config-service
+    consul:
+      enabled: true
+      port: 8500
+      host: localhost
+      discovery:
+        preferIpAddress: true
+        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+        query-passing: true
+        enabled: true
+        register: true
+        tags: prod
+        health-check-interval: 5s
+        health-check-critical-timeout: 15s
+        health-check-timeout: 5s

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vcredit.vzy.dao.mapper.DeviceDetailMapper">
+    <update id="updateByDeviceId">
+        update t_device_detail
+        <set>
+            <if test="deviceType != null">
+                device_type = #{deviceType},
+            </if>
+            <if test="deviceBrand != null">
+                device_brand = #{deviceBrand},
+            </if>
+            <if test="deviceModel != null">
+                device_model = #{deviceModel},
+            </if>
+            <if test="deviceSystem != null">
+                device_system = #{deviceSystem},
+            </if>
+            <if test="deviceSystemVersion != null">
+                device_system_version = #{deviceSystemVersion},
+            </if>
+            <if test="deviceLoginUser != null">
+                device_login_user = #{deviceLoginUser},
+            </if>
+            <if test="deviceLoginKey != null">
+                device_login_key = #{deviceLoginKey},
+            </if>
+            <if test="deviceImei != null">
+                device_imei = #{deviceImei},
+            </if>
+            <if test="deviceSerialNo != null">
+                device_serial_no = #{deviceSerialNo},
+            </if>
+            <if test="deviceResolution != null">
+                device_resolution = #{deviceResolution},
+            </if>
+            <if test="deviceColor != null">
+                device_color = #{deviceColor},
+            </if>
+            <if test="deviceSize != null">
+                device_size = #{deviceSize},
+            </if>
+            <if test="deviceAccessory != null">
+                device_accessory = #{deviceAccessory},
+            </if>
+            <if test="deviceRemark != null">
+                device_remark = #{deviceRemark},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="updatedBy != null">
+                updated_by = #{updatedBy},
+            </if>
+            <if test="updatedTime != null">
+                updated_time = #{updatedTime},
+            </if>
+        </set>
+        where device_id = #{deviceId}
+    </update>
+
+
+    <select id="queryByDeviceId" resultType="com.vcredit.vzy.dao.entity.DeviceDetailDO">
+        select device_id            as deviceId,
+               device_type          as deviceType,
+               device_brand         as deviceBrand,
+               device_model         as deviceModel,
+               device_system        as deviceSystem,
+               device_system_version as deviceSystemVersion,
+               device_login_user    as deviceLoginUser,
+               device_login_key     as deviceLoginKey,
+               device_imei          as deviceImei,
+               device_serial_no     as deviceSerialNo,
+               device_resolution    as deviceResolution,
+               device_color         as deviceColor,
+               device_size          as deviceSize,
+               device_accessory     as deviceAccessory,
+               device_remark        as deviceRemark,
+               del_flag             as delFlag,
+               created_by           as createdBy,
+               created_time         as createdTime,
+               updated_by           as updatedBy,
+               updated_time         as updatedTime
+        from t_device_detail
+        where device_id = #{deviceId}
+    </select>
+</mapper>

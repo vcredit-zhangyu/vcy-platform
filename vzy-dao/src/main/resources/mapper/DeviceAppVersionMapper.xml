@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vcredit.vzy.dao.mapper.DeviceAppVersionMapper">
+    <update id="updateByVersionId">
+        update t_device_app_version
+        <set>
+            app_platform = #{appPlatform},
+            app_version = #{appVersion},
+            version_remark = #{versionRemark},
+            download_url =#{downloadUrl},
+            updated_by = #{updatedBy},
+            updated_time = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="findOneByAppPlatform" resultType="com.vcredit.vzy.dao.entity.DeviceAppVersionDO">
+        select id,
+               app_name       as appName,
+               app_platform   as appPlatform,
+               app_version    as appVersion,
+               version_remark as versionRemark,
+               del_flag       as delFlag,
+               created_by     as createdBy,
+               created_time   as createdTime,
+               updated_by     as updatedBy,
+               updated_time   as updatedTime
+        from t_device_app_version
+        where app_platform = #{appPlatform}
+          and del_flag = 'N' limit 1
+    </select>
+
+    <select id="appVersionPageQuery" resultType="com.vcredit.vzy.common.vo.AppVersionPageVo">
+        select id             as versionId,
+               app_platform   as appPlatform,
+               app_version    as appVersion,
+               version_remark as versionRemark,
+               created_time   as createdTime,
+               updated_time   as updatedTime,
+               download_url   as downloadUrl
+        from t_device_app_version
+        where del_flag = 'N'
+        order by updated_time desc
+    </select>
+
+    <select id="queryByPlatformAndApp" resultType="com.vcredit.vzy.common.vo.AppVersionPageVo">
+        select id             as versionId,
+               app_platform   as appPlatform,
+               app_version    as appVersion,
+               version_remark as versionRemark,
+               created_time   as createdTime,
+               updated_time   as updatedTime,
+               download_url   as downloadUrl
+        from t_device_app_version
+        where del_flag = 'N'
+          and app_platform = #{appPlatform}
+          and app_name = #{appName} limit 1
+    </select>
+
+</mapper>
