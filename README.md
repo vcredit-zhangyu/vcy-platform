@@ -30,6 +30,8 @@
 - 设备连接：通过USB线或Wi-Fi连接测试手机到平台。
 - 设备管理：在设备列表中查看设备状态，执行控制操作。
 - 数据查看：访问设备状态历史记录，进行数据分析。
+- 库表Schema SQL路径：![image](https://github.com/user-attachments/assets/e5519c3e-46c9-4c80-a28b-cf82690b882f)
+
 
 ## 常见问题与解答
 Q: 如何添加新设备？
