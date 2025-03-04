@@ -61,7 +61,20 @@
 - 设备管理：在设备列表中查看设备状态，执行控制操作。
 - 数据查看：访问设备状态历史记录，进行数据分析。
 - 库表Schema SQL路径：![image](https://github.com/user-attachments/assets/e5519c3e-46c9-4c80-a28b-cf82690b882f)
-
+- 注意：需要对依赖主POM做一些调整（这些jar包公网上是拉不到的）：
+1）调整父项目依赖，需要更新为Spring或者自己公司的：
+      <parent>
+        <groupId>com.vcredit.vcs.framework</groupId>
+        <artifactId>vcredit-parent</artifactId>
+        <version>1.2.1</version>
+      </parent>
+2）动态配置客户端需要调整为自己的：
+        <dependency>
+            <groupId>com.vcredit.vcs.framework</groupId>
+            <artifactId>vcredit-vcs-base</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+有一定的二次开发量
 
 ## 常见问题与解答
 Q: 如何添加新设备？
