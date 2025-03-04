@@ -63,18 +63,15 @@
 - 库表Schema SQL路径：![image](https://github.com/user-attachments/assets/e5519c3e-46c9-4c80-a28b-cf82690b882f)
 - 注意：需要对依赖主POM做一些调整（这些jar包公网上是拉不到的）：
 1）调整父项目依赖，需要更新为Spring或者自己公司的：
-      <parent>
-        <groupId>com.vcredit.vcs.framework</groupId>
-        <artifactId>vcredit-parent</artifactId>
-        <version>1.2.1</version>
-      </parent>
-2）动态配置客户端需要调整为自己的：
-        <dependency>
-            <groupId>com.vcredit.vcs.framework</groupId>
-            <artifactId>vcredit-vcs-base</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-有一定的二次开发量
+![image](https://github.com/user-attachments/assets/ed56ee0b-9f87-4dd5-96dd-ef64678bdcf4)
+父pom里面主要是一些三方包以及版本：
+![image](https://github.com/user-attachments/assets/1ddd4759-080e-4a09-8515-77d21c96e819)
+从spring 2.6.6继承而来：
+![image](https://github.com/user-attachments/assets/c4eec6c5-fde2-4a07-9c31-4deda9a922ac)
+2）内部依赖包需要调整为自己的：
+![image](https://github.com/user-attachments/assets/71be3d24-3e9f-4c8a-95b2-c7c46bb127e7)
+![image](https://github.com/user-attachments/assets/5fdba881-b412-4cef-a648-d6b0b9d7de5b)
+对应的是公司内部如sso登录、动态配置中心等配置jar，需删除替换成自己公司的，有一定的二次开发量
 
 ## 常见问题与解答
 Q: 如何添加新设备？
